@@ -6,11 +6,16 @@ param resourceGroupNames array = [
   'shared'
   'csa-content'
 ]
+var resourceTags = {
+  Environment: 'Demo'
+  Dreployment: 'GithubAction'
+}
 
 /* Loop thru the array of RGs*/
 resource newResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = [for resourceGroupName in resourceGroupNames : {
   name: 'rg-${resourceGroupName}'
   location: defaultlocation
+  tags: resourceTags
 }]
 
 /*Deploy RG shared*/
@@ -19,7 +24,9 @@ module rgShared 'rg-shared/main.bicep' = {
   scope: resourceGroup('rg-${resourceGroupNames[1]}')
    params: {
     location: defaultlocation
+    resourceTags: resourceTags
   }
+  dependsOn: newResourceGroup
 }
 
 /*Deploy RG csa-content */
@@ -28,5 +35,7 @@ module rgCsaContent 'rg-csa-content/main.bicep' = {
   scope: resourceGroup('rg-${resourceGroupNames[2]}')
    params: {
     location: defaultlocation
+    resourceTags: resourceTags
   }
+  dependsOn: newResourceGroup
 }

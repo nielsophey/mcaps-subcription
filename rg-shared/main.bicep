@@ -10,6 +10,9 @@ param location string = resourceGroup().location
 @description('Provide a tier of your Azure Container Registry.')
 param acrSku string = 'Basic'
 
+@description('Provice Tags for the deployed resources')
+param resourceTags object
+
 resource acrResource 'Microsoft.ContainerRegistry/registries@2021-06-01-preview' = {
   name: acrName
   location: location
@@ -19,6 +22,7 @@ resource acrResource 'Microsoft.ContainerRegistry/registries@2021-06-01-preview'
   properties: {
     adminUserEnabled: false
   }
+  tags: resourceTags
 }
 
 @description('Output the login server property for later use')
