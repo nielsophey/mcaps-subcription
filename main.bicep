@@ -39,3 +39,14 @@ module rgCsaContent 'rg-csa-content/main.bicep' = {
   }
   dependsOn: newResourceGroup
 }
+
+/*Deploy RG management*/
+module rgManagement 'rg-management/main.bicep' = {
+  name:  resourceGroupNames[2]
+  scope: resourceGroup('rg-${resourceGroupNames[2]}')
+   params: {
+    location: defaultlocation
+    resourceTags: resourceTags
+  }
+  dependsOn: newResourceGroup
+}
