@@ -18,6 +18,17 @@ resource newResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = [for
   tags: resourceTags
 }]
 
+/*Deploy RG management*/
+module rgManagement 'rg-management/main.bicep' = {
+  name:  resourceGroupNames[0]
+  scope: resourceGroup('rg-${resourceGroupNames[0]}')
+   params: {
+    location: defaultlocation
+    resourceTags: resourceTags
+  }
+  dependsOn: newResourceGroup
+}
+
 /*Deploy RG shared*/
 module rgShared 'rg-shared/main.bicep' = {
   name:  resourceGroupNames[1]
@@ -40,13 +51,3 @@ module rgCsaContent 'rg-csa-content/main.bicep' = {
   dependsOn: newResourceGroup
 }
 
-/*Deploy RG management*/
-module rgManagement 'rg-management/main.bicep' = {
-  name:  resourceGroupNames[2]
-  scope: resourceGroup('rg-${resourceGroupNames[2]}')
-   params: {
-    location: defaultlocation
-    resourceTags: resourceTags
-  }
-  dependsOn: newResourceGroup
-}
